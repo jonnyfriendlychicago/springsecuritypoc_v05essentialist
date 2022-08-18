@@ -64,7 +64,9 @@ public class IndexhomeprofileCtl {
         
         // will this be the first user record?  if so, Make it... SUPER ADMIN!
         if(userSrv.allUsers().size()==0) {
-        	userSrv.newUser(userMdl, "ROLE_SUPER_ADMIN");
+//        	userSrv.newUser(userMdl, "ROLE_SUPER_ADMIN");
+        	// above line temporarily replaced with below line, so that all users are the same
+        	userSrv.newUser(userMdl, "ROLE_USER");
 		} else {
 			userSrv.newUser(userMdl, "ROLE_USER");
 		}
@@ -90,28 +92,24 @@ public class IndexhomeprofileCtl {
     
  	// end of method
  	}
-    
-    
-    @RequestMapping("/admin/{id}")
-    // JRF no idea (again...) why above says request mapping instead of post... doesn't make any sense, not sure if/how will work
-    // update on above: I think it's b/c they are doing this as a link instead of a form; same approach on the delete thing 
-	public String makeAdmin(
-			@PathVariable("id") Long userId
-			, Model model
-			) {
-		
-		UserMdl userMdl = userSrv.findById(userId);
-		userSrv.upgradeUser(userMdl);
-		
-		model.addAttribute("userList", userSrv.allUsers());
-		 
-		return "redirect:/admin";
-	}
-    
-//    @RequestMapping("/login")
-//    public String login() {return "login.jsp";}
-
-    // Above replaced by below
+  
+ 	// JRF: temporarily disabling this upgrade user program. 
+//    
+//    @RequestMapping("/admin/{id}")
+//    // JRF no idea (again...) why above says request mapping instead of post... doesn't make any sense, not sure if/how will work
+//    // update on above: I think it's b/c they are doing this as a link instead of a form; same approach on the delete thing 
+//	public String makeAdmin(
+//			@PathVariable("id") Long userId
+//			, Model model
+//			) {
+//		
+//		UserMdl userMdl = userSrv.findById(userId);
+//		userSrv.upgradeUser(userMdl);
+//		
+//		model.addAttribute("userList", userSrv.allUsers());
+//		 
+//		return "redirect:/admin";
+//	}
     
     @RequestMapping("/login")
     public String login(
@@ -131,66 +129,66 @@ public class IndexhomeprofileCtl {
     }
     
     @RequestMapping(value = {"/", "/home"})
+    
     public String home(
     		Principal principal
     		, Model model
-    		) {
-        // 1
-//        String username = principal.getName();
-//        model.addAttribute("currentUser", userSrv.findByUsername(username));
-    	
-    	// above replaced by below
+    		) {    	
          
         String email = principal.getName();
 		UserMdl userMdl = userSrv.findByEmail(email);
 		model.addAttribute("currentUser", userMdl);
 		
-		if(userMdl!=null) {
-			userMdl.setLastLogin(new Date());
-			userSrv.updateUser(userMdl);
-			// If the user is an ADMIN or SUPER_ADMIN they will be redirected to the admin page
-			if(userMdl.getRoleMdl().get(0).getName().contains("ROLE_SUPER_ADMIN") || userMdl.getRoleMdl().get(0).getName().contains("ROLE_ADMIN")) {
-				model.addAttribute("currentUser", userSrv.findByEmail(email));
-				model.addAttribute("userList", userSrv.allUsers());
-				return "admin.jsp";
-			}
-			// All other users are redirected to the home page
-		}
+		// JRF temporarily removing below: updating last login and substituting admin.jsp for home is not desired
+//		if(userMdl!=null) {
+//			userMdl.setLastLogin(new Date());
+//			userSrv.updateUser(userMdl);
+//			// If the user is an ADMIN or SUPER_ADMIN they will be redirected to the admin page
+//			if(userMdl.getRoleMdl().get(0).getName().contains("ROLE_SUPER_ADMIN") || userMdl.getRoleMdl().get(0).getName().contains("ROLE_ADMIN")) {
+//				model.addAttribute("currentUser", userSrv.findByEmail(email));
+//				model.addAttribute("userList", userSrv.allUsers());
+//				return "admin.jsp";
+//			}
+//			// All other users are redirected to the home page
+//		}
 		
         return "home.jsp";
     }
     
-    @RequestMapping("/admin")
-    public String adminDisplayPage(
-    		Principal principal
-    		, Model model
-    		) {
-    	
-//    	String username = principal.getName();
-//      above replaced by below
-    	String email = principal.getName();
-    	
-//    	model.addAttribute("currentUser", userSrv.findByUsername(username));
-    	// above replaced by below
-    	model.addAttribute("currentUser", userSrv.findByEmail(email));
-    	model.addAttribute("userList", userSrv.allUsers());
-    	
-    	return "admin.jsp";
-    }
+    // JRF temporarily disabling this whole admin program
+//    @RequestMapping("/admin")
+//    public String adminDisplayPage(
+//    		Principal principal
+//    		, Model model
+//    		) {
+//    	
+////    	String username = principal.getName();
+////      above replaced by below
+//    	String email = principal.getName();
+//    	
+////    	model.addAttribute("currentUser", userSrv.findByUsername(username));
+//    	// above replaced by below
+//    	model.addAttribute("currentUser", userSrv.findByEmail(email));
+//    	model.addAttribute("userList", userSrv.allUsers());
+//    	
+//    	return "admin.jsp";
+//    }
     
-    @RequestMapping("/delete/{id}")
-	public String deleteUser(
-			@PathVariable("id") Long userId
-			, HttpSession session
-			, Model model
-			) {	
-		UserMdl userMdl = userSrv.findById(userId);
-		userSrv.deleteUser(userMdl);
-		
-		model.addAttribute("userList", userSrv.allUsers());
-		 
-		return "redirect:/admin";
-	}
+    // JRF: temporarily disabling this 'delete users' program.
+    
+//    @RequestMapping("/delete/{id}")
+//	public String deleteUser(
+//			@PathVariable("id") Long userId
+//			, HttpSession session
+//			, Model model
+//			) {	
+//		UserMdl userMdl = userSrv.findById(userId);
+//		userSrv.deleteUser(userMdl);
+//		
+//		model.addAttribute("userList", userSrv.allUsers());
+//		 
+//		return "redirect:/admin";
+//	}
     
     
 // end of ctl methods

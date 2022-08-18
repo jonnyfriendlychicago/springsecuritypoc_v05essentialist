@@ -27,11 +27,6 @@ public class RoleMdl {
 	// END: entity-specific fields
 
 	// BEGIN: joins
-
-//	@ManyToMany(mappedBy = "roles")
-//	private List<UserMdl> userMdl;
-
-	// above replaced by below
 	
  	// join user 
     @ManyToMany(fetch = FetchType.LAZY)
